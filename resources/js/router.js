@@ -9,6 +9,10 @@ import DataOutlet from './pages/outlets/Outlet.vue'
 import AddOutlet from './pages/outlets/Add.vue'
 import EditOutlet from './pages/outlets/Edit.vue'
 
+import IndexCourier from './pages/couriers/Index.vue'
+import DataCourier from './pages/couriers/Courier.vue'
+import AddCouriers from './pages/couriers/Add.vue'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -28,6 +32,7 @@ const router = new Router({
         {
             path: '/outlets',
             component: IndexOutlet,
+            meta: { requireAuth: true },//menandakan proses membutuhkan otentikasi
             children: [
                 {
                     path: '',
@@ -46,6 +51,25 @@ const router = new Router({
                     name: 'outlets.edit',
                     component: EditOutlet,
                     meta: { title: 'Edit Outlet' }
+                }
+            ]
+        },
+        {
+            path: '/couriers',
+            component: IndexCourier,
+            meta: { requireAuth: true },
+            children: [
+                {
+                    path: '',
+                    name: 'couriers.data',
+                    component: DataCourier,
+                    meta: { title: 'Manage Couriers' }
+                },
+                {
+                    path: 'add',
+                    name: 'couriers.add',
+                    component: AddCouriers,
+                    meta: { title: 'Add New Courier' }
                 }
             ]
         }

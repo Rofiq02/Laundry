@@ -19,6 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => 'auth:api'], function(){
     Route::resource('/outlets', 'API\OutletControl')->except(['show']);
+    Route::resource('/couriers', 'API\UserControl')->except(['create','show','update']);
+    Route::post('/couriers/{id}', 'API\UserControl@update')->name('couriers.update');
 });
 
 Route::post('/login', 'Auth\LoginController@login');

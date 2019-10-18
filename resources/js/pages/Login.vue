@@ -68,7 +68,7 @@ export default {
         postLogin(){
             this.submit(this.data).then(() =>{
                 //mengecek isi value
-                if(this.isAuth == true){
+                if(this.isAuth){
                     this.CLEAR_ERRORS()
                     //lalu direct
                     this.$router.push({ name: 'home'})
