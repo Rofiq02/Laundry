@@ -2,13 +2,15 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import auth from './stores/auth.js'
+import outlet from './stores/outlet.js'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
     //menetapkan module
     modules: {
-        auth
+        auth,
+        outlet
     },
     state: {
         //token diambil dari local storage token
@@ -24,13 +26,13 @@ const store = new Vuex.Store({
 
     //mutation berfungsi untuk memanipulasi value dari state token
     mutations:{
-        set_token(state, payload){
+        SET_TOKEN(state, payload){
             state.token = payload
         },
-        set_errors(state, payload){
+        SET_ERRORS(state, payload){
             state.erros = payload
         },
-        clear_errors(state){
+        CLEAR_ERRORS(state){
             state.errors = []
         }
     }

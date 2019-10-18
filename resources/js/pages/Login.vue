@@ -7,12 +7,12 @@
             <div class="login-box-body">
                 <p class="login-box-msg">Login</p>
                 <div class="form-group has-feedback" :class="{'has-error': errors.email}">
-                    <input type="email" class="form-control" placeholder="Email" v-model="isi.email">
+                    <input type="email" class="form-control" placeholder="Email" v-model="data.email">
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     <p class="text-danger" v-if="errors.email">{{ errors.email[0] }}</p>
                 </div>
                 <div class="form-group has-feedback" :class="{'has-error': errors.password}">
-                    <input type="password" class="form-control" placeholder="Password" v-model="isi.password">
+                    <input type="password" class="form-control" placeholder="Password" v-model="data.password">
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     <p class="text-danger" v-if="errors.password">{{ errors.password[0] }}</p>
                 </div>
@@ -41,7 +41,7 @@ import { mapActions, mapMutations, mapGetters, mapState } from 'vuex';
 export default {
     data(){
         return {
-            isi:{
+            data:{
                 email: '',
                 password: '',
                 remember_me: false
@@ -53,7 +53,7 @@ export default {
         //di cek terlebih dahulu
         if(this.isAuth){
             //jika iya akan melakukan direct ke route dengan name home
-            this.$router.push({ name : 'hoem'})
+            this.$router.push({ name : 'home'})
         }
     },
     computed: {
@@ -62,14 +62,14 @@ export default {
     },
     methods:{
         ...mapActions('auth', ['submit']), //menjalankan fungsi submit agar dapat digunakan pada componentnya
-        ...mapMutations(['clear_errors']),
+        ...mapMutations(['CLEAR_ERRORS']),
 
         //fungsi untuk login
         postLogin(){
-            this.submit(this.isi).then(() =>{
+            this.submit(this.data).then(() =>{
                 //mengecek isi value
-                if(this.isAuth){
-                    this.clear_errors()
+                if(this.isAuth == true){
+                    this.CLEAR_ERRORS()
                     //lalu direct
                     this.$router.push({ name: 'home'})
                 }
