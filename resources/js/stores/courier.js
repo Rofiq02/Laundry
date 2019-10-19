@@ -36,6 +36,62 @@ const actions = {
                 resolve(response.data)
             })
         })
+    },
+    submitCourier({ dispatch, commit }, payload){
+        return new Promise((resolve, reject) => {
+            //mengirim permintaan ke server dengan method post
+            $axios.post(`/couriers`, payload, {
+                //header ditambahkan karena ada file foto
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then((response) =>{
+                // ketikan berhasil maka dilakukan request untuk mengambil data kurir terbaru
+                dispatch('getCouriers').then(() =>{
+                    resolve(response.data)
+                })
+            })
+            .catch((error) => {
+                //jika gagal validasi
+                if(error.response.status == 422){
+                    commit('SET_ERRORS', error.response.data.errors, { root: true })
+                }
+            })
+        })
+    },
+    editCourier({ commit }, payload){
+        return new Promise((resolve, reject) => {
+            //fungsi untuk melakukan request single data berdasarkan id kurir
+            $axios.get(`/couriers/${payload}/edit`)
+            .then((response) => {
+                //Data yang diterima akan dikirim ke form
+                resolve(response.data)
+            })
+        })
+    },
+    updateCourier({ state }, payload){
+        return new Promise((resolve, reject) => {
+            //fungsi untuk melakukan request dan perubahan data kurir berdasarkan state id kurir
+            $axios.post(`/couriers/${state.id}`, payload, {
+                headers: {
+                    'Content-Type' : 'multipart/form-data'
+                }
+            })
+            .then((response) => {
+                resolve(response.data)
+            })
+        })
+    },
+    removeCourier({ dispatch }, payload){
+        return new Promise((resolve, reject) => {
+            //mengirim permintaan ke server dengan method delete dan mengirimlan id yg akan dihapus
+            $axios.delete(`/couriers/${payload}`)
+            .then((response) => {
+                //mengambil data terbaru dari server
+                dispatch('getCouriers').then(() => resolve(response.data))
+            })
+        })
     }
 }
 

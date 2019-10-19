@@ -2,32 +2,32 @@
     <div class="col-md-12">
         <div class="panel">
             <div class="panel-heading">
-                <h3 class="panel-title">Add New Courier</h3>
+                <h3 class="panel-title">Edit Product</h3>
             </div>
             <div class="panel-body">
-                <courier-form ref="formCourier"></courier-form>
-                <div class="forg-group">
+                <product-form ref="formProduct"></product-form>
+                <div class="form-group">
                     <button class="btn btn-primary btn-sm btn-flat" @click.prevent="submit">
-                        <i class="fa fa-save"></i> Add New
+                        <i class="fa fa-save"></i> Update
                     </button>
                 </div>
             </div>
         </div>
     </div>
 </template>
-
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex'
-import FormCourier from './Form.vue'
+import { mapActions, mapState } from 'vuex'
+import FormProduct from './Form.vue'
 export default {
-    name: 'AddCourier',
+    name: 'EdiProduct',
     methods: {
+        //ketika tombol update di tekan
         submit(){
-            this.$refs.formCourier.submit()
+            this.$refs.formProduct.submit()
         }
     },
     components: {
-        'courier-form': FormCourier
-    }
+        'product-form': FormProduct
+    },
 }
 </script>
