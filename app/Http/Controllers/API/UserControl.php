@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Http\Resources\UserCollection;
 use DB, File;
+use Spatie\Permission\Models\Permission;
 
 class UserControl extends Controller
 {
@@ -112,6 +113,25 @@ class UserControl extends Controller
         File::delete(storage_path('app/public/couriers/' . $user->photo)); //menghapus file foto
         $user->delete();
         return response()->json(['status' => 'success']);
+    }
+
+    public function userLists()
+    {
+        $user = User::where('role', '!=', 3)->get();
+        return new UserCollection($user);
+    }
+
+    public function getUserLogin()
+    {
+        $user = request()->user();
+        $permissions = [];
+        foreach (Permissions::all() as $permission){
+            if(request()->user()->can($permission->name)){
+                $permissions[] = $permission->name;
+            }
+        }
+        $user['permission'] = $permissions;
+        return response()->json(['status' => 'success', 'data' => $user]);
     }
 
 }
