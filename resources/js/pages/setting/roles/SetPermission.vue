@@ -154,9 +154,11 @@ export default {
             if(index == -1){
                 //maka akan menambhkan ke list
                 this.new_permission.push(name)
+
             }else{
                 //jika sudah ada maka hapus dari list
-                this.new_permission.splice(index, x, name)
+                this.new_permission.splice(index, 1)
+
             }
 
         },

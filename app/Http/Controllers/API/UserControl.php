@@ -38,7 +38,7 @@ class UserControl extends Controller
             if($request->hasFile('photo')){
                 //maka file tersebut akan disimpan ke storage
                 $file = $request->file('photo');
-                $name = $request->email . '-' / time() . '.' .$file->getClientOriginalExtension();
+                $name = $request->email . '-' . time() . '.' .$file->getClientOriginalExtension();
                 $file->storeAs('public/couriers',$name);
             }
 

@@ -7,7 +7,7 @@
                     <input type="text" class="form-control" placeholder="cari" v-model="search">
                 </div>
             </div>
-            <div class="body">
+            <div class="panel-body">
                 <!-- untuk menampilkan data courie -->
                 <b-table striped hover bordered :items="couriers.data" :fields="fields" show-empty>
 

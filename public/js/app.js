@@ -3684,7 +3684,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.new_permission.push(name);
       } else {
         //jika sudah ada maka hapus dari list
-        this.new_permission.splice(index, x, name);
+        this.new_permission.splice(index, 1);
       }
     },
     //fungsi yg telah di assign ke dalam role yg dipilih
@@ -40275,7 +40275,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "body" },
+        { staticClass: "panel-body" },
         [
           _c("b-table", {
             attrs: {
@@ -40502,7 +40502,7 @@ var render = function() {
             }
           ],
           staticClass: "form-control",
-          attrs: { type: "text", readonly: _vm.$route.name == "outlets.edit" },
+          attrs: { type: "text", readonly: _vm.$route.name == "couriers.edit" },
           domProps: { value: _vm.courier.name },
           on: {
             input: function($event) {
