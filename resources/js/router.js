@@ -31,7 +31,7 @@ const router = new Router({
             path: '/',
             name: 'home',
             component: Home,
-            meta: { requireAuth: true }//menandakan proses membutuhkan otentikasi
+            meta: { requiresAuth: true }//menandakan proses membutuhkan otentikasi
         },
         {
             path: '/login',
@@ -41,7 +41,7 @@ const router = new Router({
         {
             path: '/outlets',
             component: IndexOutlet,
-            meta: { requireAuth: true },//menandakan proses membutuhkan otentikasi
+            meta: { requiresAuth: true },//menandakan proses membutuhkan otentikasi
             children: [
                 {
                     path: '',
@@ -66,7 +66,7 @@ const router = new Router({
         {
             path: '/couriers',
             component: IndexCourier,
-            meta: { requireAuth: true },
+            meta: { requiresAuth: true },
             children: [
                 {
                     path: '',
@@ -91,7 +91,7 @@ const router = new Router({
         {
             path: '/product',
             component: IndexProduct,
-            meta: { requireAuth: true },
+            meta: { requiresAuth: true },
             children: [
                 {
                     path: '',
@@ -116,7 +116,7 @@ const router = new Router({
         {
             path: '/setting',
             component: Setting,
-            meta: { requireAuth: true },
+            meta: { requiresAuth: true },
             children: [
                 {
                     path: 'role-permission',
@@ -134,7 +134,7 @@ const router = new Router({
 //jika sudah login maka lanjut ke home jika belum tetap di halaman login
 router.beforeEach((to, from, next) =>{
     store.commit('CLEAR_ERRORS') //berfungsi untuk membersihkan state error setiap halaman di load
-    if(to.matched.some(record => record.meta.requireAuth)){
+    if(to.matched.some(record => record.meta.requiresAuth)){
         let auth = store.getters.isAuth
         if(!auth){
             next({name : 'login'})

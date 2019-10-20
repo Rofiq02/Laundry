@@ -13,7 +13,7 @@
                 </div>
                 <div class="form-group has-feedback" :class="{'has-error': errors.password}">
                     <input type="password" class="form-control" placeholder="Password" v-model="data.password">
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     <p class="text-danger" v-if="errors.password">{{ errors.password[0] }}</p>
                 </div>
                 <div class="alert alert-danger" v-if="errors.invalid">{{ errors.invalid }}</div>
@@ -62,6 +62,7 @@ export default {
     },
     methods:{
         ...mapActions('auth', ['submit']), //menjalankan fungsi submit agar dapat digunakan pada componentnya
+        ...mapActions('user', ['getUserLogin']), //mengambil data sedang login
         ...mapMutations(['CLEAR_ERRORS']),
 
         //fungsi untuk login
@@ -75,6 +76,9 @@ export default {
                 }
             })
         }
+    },
+    destroyed(){
+        this.getUserLogin()
     }
 }
 </script>

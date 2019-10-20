@@ -19,7 +19,7 @@ const mutations = {
         state.permissions = payload
     },
     ASSIGN_ROLE_PERMISSION(state, payload){
-        state.permissions = payload
+        state.role_permission = payload
     },
     CLEAR_ROLE_PERMISSION(state, payload){
         state.role_permission = []
@@ -107,7 +107,7 @@ const actions = {
                 //apabila terjadi error validasi
                 if(error.response.status == 422){
                     //set errornya agar dapat ditampilkan
-                    commit('SET_ERROS', error.response.data.errors, { root: true })
+                    commit('SET_ERRORS', error.response.data.errors, { root: true })
                 }
             })
         })

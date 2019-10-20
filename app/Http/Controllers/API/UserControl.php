@@ -125,7 +125,7 @@ class UserControl extends Controller
     {
         $user = request()->user();
         $permissions = [];
-        foreach (Permissions::all() as $permission){
+        foreach (Permission::all() as $permission){
             if(request()->user()->can($permission->name)){
                 $permissions[] = $permission->name;
             }

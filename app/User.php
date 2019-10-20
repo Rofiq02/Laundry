@@ -48,4 +48,9 @@ class User extends Authenticatable
     {
         return $query->where('role', 3); //mengamnil data role 3 yakni courier
     }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
 }

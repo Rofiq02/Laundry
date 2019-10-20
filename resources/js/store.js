@@ -36,7 +36,7 @@ const store = new Vuex.Store({
             state.token = payload
         },
         SET_ERRORS(state, payload){
-            state.erros = payload
+            state.errors = payload
         },
         CLEAR_ERRORS(state){
             state.errors = []

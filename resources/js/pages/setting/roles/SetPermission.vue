@@ -16,7 +16,7 @@
                                 <option value="">Pilih</option>
                                 <option v-for="(row, index) in roles" :value="row.name" :key="index">{{ row.name }}</option>
                             </select>
-                            <p class="text-danger" v-if="errors.role_id">{{ errors.role_id }}</p>
+                            <p class="text-danger" v-if="errors.role_id">{{ errors.role_id[0] }}</p>
                         </div>
                         <div class="form-group">
                             <label for="">User</label>
@@ -48,6 +48,9 @@
                             <p class="text-danger" v-if="errors.role_id">{{ errors.role_id[0] }}</p>
                         </div>
                         <div class="form-group">
+                            <button class="btn btn-primary btn-sm" @click="checkPermission">{{ loading ? 'Loading..':'Check' }}</button>
+                        </div>
+                        <div class="form-group">
                             <div class="alert alert-success" v-if="alert_permission">Permission has been assigned</div>
                             <div class="nav-tabs-custom">
                                 <ul class="nav nav-tabs">
@@ -57,7 +60,7 @@
                                 </ul>
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="tab_1">
-                                        <template v-for="( row, index ) in permission">
+                                        <template v-for="( row, index ) in permissions">
                                             <input type="checkbox"
                                                     class="minimal-red"
                                                     :key="index"
@@ -98,14 +101,14 @@ export default {
             alert_role: false
         }
     },
-    crated() {
+    created() {
         //ketika di load maka akan me request ke 3 component tersebut
         this.getRoles() //Data roles
         this.getAllPermission() //data permission
-        this.getUserList()// Data Users
+        this.getUserLists()// Data Users
     },
     computed: {
-        ...mapState(['errros']), //load state errros
+        ...mapState(['errors']), //load state errros
         ...mapState('user', {
             users: state => state.users, //load state users
             roles: state => state.roles, //load state roles
@@ -126,7 +129,7 @@ export default {
             'setRoleUser'
         ]),
         //load mutation dari store user
-        ...mapMutations('user', ['CLEAR_ROLE_PERMISSIONS']),
+        ...mapMutations('user', ['CLEAR_ROLE_PERMISSION']),
 
         setRole(){
             //mengirim permintaan ke backend
@@ -144,7 +147,7 @@ export default {
             })
         },
         //ketika list permission di centang, makan fungsi ini berja;an
-        addPermision(name){
+        addPermission(name){
             //di cek berdasarkan name
             let index = this.new_permission.findIndex(x => x == name)
             //apabila tidak tersedia indexnya -1
@@ -153,14 +156,15 @@ export default {
                 this.new_permission.push(name)
             }else{
                 //jika sudah ada maka hapus dari list
-                this.new_permission.splice(index, 1)
+                this.new_permission.splice(index, x, name)
             }
+
         },
         //fungsi yg telah di assign ke dalam role yg dipilih
         checkPermission(){
             this.loading = true //mengaktifkan loading tombol
             //mengirim permintaan ke back end
-            this.getRolePermission(this.role.selected).then(() => {
+            this.getRolePermission(this.role_selected).then(() => {
                 //apabila berhasil, matikan loading
                 this.loading = false
                 //permission yg telah di assign akan di merge ke new permission
@@ -176,7 +180,7 @@ export default {
                 permissions: this.new_permission
             }).then((res) => {
                 //apahbila berhasi;
-                if(res.status == 'SUCCESS'){
+                if(res.status == 'success'){
                     //mengaktifkan alert
                     this.alert_permission = true
                     setTimeout(() => {
@@ -186,7 +190,7 @@ export default {
                         this.loading = false
                         this.alert_permission = false
                         this.CLEAR_ROLE_PERMISSION()
-                    }, 100)
+                    }, 1000)
                 }
             })
         }

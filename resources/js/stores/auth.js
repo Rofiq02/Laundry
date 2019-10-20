@@ -26,6 +26,7 @@ const actions = {
                     commit('SET_TOKEN', response.data.data, { root: true })
                 }else{
                     commit('SET_ERRORS', { invalid: 'Email/Password Salah' }, { root:true })
+                    // alert('error');
                 }
 
                 resolve(response.data)//kegunaan resolve diakhir agar dianggap proses selesai

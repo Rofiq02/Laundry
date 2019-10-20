@@ -32,6 +32,8 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('role-permission', 'API\RolePermissionControl@getRolePermission')->name('role_permission');
     Route::post('set-role-permission', 'API\RolePermissionControl@setRolePermission')->name('set_role_permission');
     Route::post('set-role-user', 'API\RolePermissionControl@setRoleUser')->name('user.set_role');
+    Route::get('user-authenticated', 'API\UserControl@getUserLogin')->name('user.authenticated');
+    Route::get('user-lists', 'API\UserControl@userLists')->name('user.index');
 });
 
 Route::post('/login', 'Auth\LoginController@login');

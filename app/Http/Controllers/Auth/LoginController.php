@@ -56,6 +56,7 @@ class LoginController extends Controller
             return response()->json(['status' => 'success' ,'data' => auth()->user()->api_token], 200);
         }
         //ketika permiintaan gagal
+
         return response()->json(['status' => 'failed']);
     }
 }

@@ -4,6 +4,10 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use DB;
+use App\User;
 
 class RolePermissionControl extends Controller
 {
@@ -22,7 +26,7 @@ class RolePermissionControl extends Controller
     }
 
     //mengambil permission yg dimiliki oleh role tertentu
-    public function getRolePermission(Requet $request)
+    public function getRolePermission(Request $request)
     {
         $hasPermission = DB::table('role_has_permissions')
             ->select('permissions.name')
@@ -52,6 +56,6 @@ class RolePermissionControl extends Controller
 
         $user = User::find($request->user_id);
         $user->syncRoles([$request->role]);
-        return respone()->json(['status' => 'success']);
+        return response()->json(['status' => 'success']);
     }
 }

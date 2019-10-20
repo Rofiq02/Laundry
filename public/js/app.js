@@ -1925,6 +1925,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2071,14 +2078,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({});
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('user', {
+    authenticated: function authenticated(state) {
+      return state.authenticated;
+    } //Me load state authenticated
+
+  })),
+  methods: {
+    //ketika tombol logout ditekan, fungsi ini dijalankan
+    logout: function logout() {
+      var _this = this;
+
+      return new Promise(function (resolve, reject) {
+        localStorage.removeItem('token'); //menghapus token dari localstorage
+
+        resolve();
+      }).then(function () {
+        //memperbarui state token
+        _this.$store.state.token = localStorage.getItem('token');
+
+        _this.$router.push('/login'); // redirect le page login
+
+      });
+    }
+  }
+});
 
 /***/ }),
 
@@ -2209,7 +2235,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['isAuth']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['errors'])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('auth', ['submit']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])(['CLEAR_ERRORS']), {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('auth', ['submit']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('user', ['getUserLogin']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])(['CLEAR_ERRORS']), {
     //fungsi untuk login
     postLogin: function postLogin() {
       var _this = this;
@@ -2226,7 +2252,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
       });
     }
-  })
+  }),
+  destroyed: function destroyed() {
+    this.getUserLogin();
+  }
 });
 
 /***/ }),
@@ -3579,6 +3608,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'SetPermission',
@@ -3595,15 +3627,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       alert_role: false
     };
   },
-  crated: function crated() {
+  created: function created() {
     //ketika di load maka akan me request ke 3 component tersebut
     this.getRoles(); //Data roles
 
     this.getAllPermission(); //data permission
 
-    this.getUserList(); // Data Users
+    this.getUserLists(); // Data Users
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['errros']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('user', {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['errors']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('user', {
     users: function users(state) {
       return state.users;
     },
@@ -3621,7 +3653,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return state.role_permission;
     }
   })),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('user', ['getUserLists', 'getRoles', 'getAllPermission', 'getRolePermission', 'setRolePermission', 'setRoleUser']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])('user', ['CLEAR_ROLE_PERMISSIONS']), {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('user', ['getUserLists', 'getRoles', 'getAllPermission', 'getRolePermission', 'setRolePermission', 'setRoleUser']), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])('user', ['CLEAR_ROLE_PERMISSION']), {
     setRole: function setRole() {
       var _this = this;
 
@@ -3641,7 +3673,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     //ketika list permission di centang, makan fungsi ini berja;an
-    addPermision: function addPermision(name) {
+    addPermission: function addPermission(name) {
       //di cek berdasarkan name
       var index = this.new_permission.findIndex(function (x) {
         return x == name;
@@ -3652,7 +3684,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.new_permission.push(name);
       } else {
         //jika sudah ada maka hapus dari list
-        this.new_permission.splice(index, 1);
+        this.new_permission.splice(index, x, name);
       }
     },
     //fungsi yg telah di assign ke dalam role yg dipilih
@@ -3662,7 +3694,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.loading = true; //mengaktifkan loading tombol
       //mengirim permintaan ke back end
 
-      this.getRolePermission(this.role.selected).then(function () {
+      this.getRolePermission(this.role_selected).then(function () {
         //apabila berhasil, matikan loading
         _this2.loading = false; //permission yg telah di assign akan di merge ke new permission
 
@@ -3679,7 +3711,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         permissions: this.new_permission
       }).then(function (res) {
         //apahbila berhasi;
-        if (res.status == 'SUCCESS') {
+        if (res.status == 'success') {
           //mengaktifkan alert
           _this3.alert_permission = true;
           setTimeout(function () {
@@ -3690,7 +3722,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             _this3.alert_permission = false;
 
             _this3.CLEAR_ROLE_PERMISSION();
-          }, 100);
+          }, 1000);
         }
       });
     }
@@ -39451,52 +39483,141 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              _c(
-                "li",
-                [
-                  _c(
-                    "router-link",
-                    { attrs: { to: { name: "outlets.data" } } },
-                    [_vm._v("Outlets")]
+              _vm.$can("read outlets")
+                ? _c(
+                    "li",
+                    [
+                      _c(
+                        "router-link",
+                        { attrs: { to: { name: "outlets.data" } } },
+                        [_vm._v("Outlets")]
+                      )
+                    ],
+                    1
                   )
-                ],
-                1
-              ),
+                : _vm._e(),
               _vm._v(" "),
-              _c(
-                "li",
-                [
-                  _c(
-                    "router-link",
-                    { attrs: { to: { name: "couriers.data" } } },
-                    [_vm._v("Courier")]
+              _vm.$can("read couriers")
+                ? _c(
+                    "li",
+                    [
+                      _c(
+                        "router-link",
+                        { attrs: { to: { name: "couriers.data" } } },
+                        [_vm._v("Courier")]
+                      )
+                    ],
+                    1
                   )
-                ],
-                1
-              ),
+                : _vm._e(),
               _vm._v(" "),
-              _c(
-                "li",
-                [
-                  _c(
-                    "router-link",
-                    { attrs: { to: { name: "products.data" } } },
-                    [_vm._v("Products")]
+              _vm.$can("read products")
+                ? _c(
+                    "li",
+                    [
+                      _c(
+                        "router-link",
+                        { attrs: { to: { name: "products.data" } } },
+                        [_vm._v("Products")]
+                      )
+                    ],
+                    1
                   )
-                ],
-                1
-              ),
+                : _vm._e(),
               _vm._v(" "),
-              _vm._m(1),
-              _vm._v(" "),
-              _vm._m(2)
+              _vm.authenticated.role == 0
+                ? _c("li", { staticClass: "dropdown" }, [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c(
+                      "ul",
+                      { staticClass: "dropdown-menu", attrs: { role: "menu" } },
+                      [
+                        _c(
+                          "li",
+                          [
+                            _c(
+                              "router-link",
+                              { attrs: { to: { name: "role.permissions" } } },
+                              [_vm._v("Role Permission")]
+                            )
+                          ],
+                          1
+                        )
+                      ]
+                    )
+                  ])
+                : _vm._e()
             ]),
             _vm._v(" "),
-            _vm._m(3)
+            _vm._m(2)
           ]
         ),
         _vm._v(" "),
-        _vm._m(4)
+        _c("div", { staticClass: "navbar-custom-menu" }, [
+          _c("ul", { staticClass: "nav navbar-nav" }, [
+            _vm._m(3),
+            _vm._v(" "),
+            _vm._m(4),
+            _vm._v(" "),
+            _vm._m(5),
+            _vm._v(" "),
+            _c("li", { staticClass: "dropdown user user-menu" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "dropdown-toggle",
+                  attrs: { href: "#", "data-toggle": "dropdown" }
+                },
+                [
+                  _c("img", {
+                    staticClass: "user-image",
+                    attrs: {
+                      src: "https://via.placeholder.com/160",
+                      alt: "User Image"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "hidden-xs" }, [
+                    _vm._v(_vm._s(_vm.authenticated.name))
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c("ul", { staticClass: "dropdown-menu" }, [
+                _c("li", { staticClass: "user-header" }, [
+                  _c("img", {
+                    staticClass: "img-circle",
+                    attrs: {
+                      src: "https://via.placeholder.com/160",
+                      alt: "User Image"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("p", [_vm._v(_vm._s(_vm.authenticated.name))])
+                ]),
+                _vm._v(" "),
+                _vm._m(6),
+                _vm._v(" "),
+                _c("li", { staticClass: "user-footer" }, [
+                  _vm._m(7),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "pull-right" }, [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn btn-default btn-flat",
+                        attrs: { href: "javascript:void(0)" },
+                        on: { click: _vm.logout }
+                      },
+                      [_vm._v("Sign out")]
+                    )
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
       ])
     ])
   ])
@@ -39523,46 +39644,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Link")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "dropdown" }, [
-      _c(
-        "a",
-        {
-          staticClass: "dropdown-toggle",
-          attrs: { href: "#", "data-toggle": "dropdown" }
-        },
-        [_vm._v("Dropdown "), _c("span", { staticClass: "caret" })]
-      ),
-      _vm._v(" "),
-      _c("ul", { staticClass: "dropdown-menu", attrs: { role: "menu" } }, [
-        _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Action")])]),
-        _vm._v(" "),
-        _c("li", [
-          _c("a", { attrs: { href: "#" } }, [_vm._v("Another action")])
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c("a", { attrs: { href: "#" } }, [_vm._v("Something else here")])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "divider" }),
-        _vm._v(" "),
-        _c("li", [
-          _c("a", { attrs: { href: "#" } }, [_vm._v("Separated link")])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "divider" }),
-        _vm._v(" "),
-        _c("li", [
-          _c("a", { attrs: { href: "#" } }, [_vm._v("One more separated link")])
-        ])
-      ])
-    ])
+    return _c(
+      "a",
+      {
+        staticClass: "dropdown-toggle",
+        attrs: {
+          href: "javascript:void(0)",
+          "data-toggle": "dropdown",
+          "aria-expanded": "true"
+        }
+      },
+      [_vm._v("Settings "), _c("span", { staticClass: "caret" })]
+    )
   },
   function() {
     var _vm = this
@@ -39589,242 +39682,182 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "navbar-custom-menu" }, [
-      _c("ul", { staticClass: "nav navbar-nav" }, [
-        _c("li", { staticClass: "dropdown messages-menu" }, [
-          _c(
-            "a",
-            {
-              staticClass: "dropdown-toggle",
-              attrs: { href: "#", "data-toggle": "dropdown" }
-            },
-            [
-              _c("i", { staticClass: "fa fa-envelope-o" }),
-              _vm._v(" "),
-              _c("span", { staticClass: "label label-success" }, [_vm._v("4")])
-            ]
-          ),
+    return _c("li", { staticClass: "dropdown messages-menu" }, [
+      _c(
+        "a",
+        {
+          staticClass: "dropdown-toggle",
+          attrs: { href: "#", "data-toggle": "dropdown" }
+        },
+        [
+          _c("i", { staticClass: "fa fa-envelope-o" }),
           _vm._v(" "),
-          _c("ul", { staticClass: "dropdown-menu" }, [
-            _c("li", { staticClass: "header" }, [
-              _vm._v("You have 4 messages")
-            ]),
-            _vm._v(" "),
-            _c("li", [
-              _c("ul", { staticClass: "menu" }, [
-                _c("li", [
-                  _c("a", { attrs: { href: "#" } }, [
-                    _c("div", { staticClass: "pull-left" }, [
-                      _c("img", {
-                        staticClass: "img-circle",
-                        attrs: {
-                          src: "https://via.placeholder.com/160",
-                          alt: "User Image"
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("h4", [
-                      _vm._v(
-                        "\n                                                Support Team\n                                                "
-                      ),
-                      _c("small", [
-                        _c("i", { staticClass: "fa fa-clock-o" }),
-                        _vm._v(" 5 mins")
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("p", [_vm._v("Why not buy a new awesome theme?")])
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("li", { staticClass: "footer" }, [
-              _c("a", { attrs: { href: "#" } }, [_vm._v("See All Messages")])
-            ])
-          ])
-        ]),
+          _c("span", { staticClass: "label label-success" }, [_vm._v("4")])
+        ]
+      ),
+      _vm._v(" "),
+      _c("ul", { staticClass: "dropdown-menu" }, [
+        _c("li", { staticClass: "header" }, [_vm._v("You have 4 messages")]),
         _vm._v(" "),
-        _c("li", { staticClass: "dropdown notifications-menu" }, [
-          _c(
-            "a",
-            {
-              staticClass: "dropdown-toggle",
-              attrs: { href: "#", "data-toggle": "dropdown" }
-            },
-            [
-              _c("i", { staticClass: "fa fa-bell-o" }),
-              _vm._v(" "),
-              _c("span", { staticClass: "label label-warning" }, [_vm._v("10")])
-            ]
-          ),
-          _vm._v(" "),
-          _c("ul", { staticClass: "dropdown-menu" }, [
-            _c("li", { staticClass: "header" }, [
-              _vm._v("You have 10 notifications")
-            ]),
-            _vm._v(" "),
+        _c("li", [
+          _c("ul", { staticClass: "menu" }, [
             _c("li", [
-              _c("ul", { staticClass: "menu" }, [
-                _c("li", [
-                  _c("a", { attrs: { href: "#" } }, [
-                    _c("i", { staticClass: "fa fa-users text-aqua" }),
-                    _vm._v(
-                      " 5 new members joined today\n                                        "
-                    )
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("li", { staticClass: "footer" }, [
-              _c("a", { attrs: { href: "#" } }, [_vm._v("View all")])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "dropdown tasks-menu" }, [
-          _c(
-            "a",
-            {
-              staticClass: "dropdown-toggle",
-              attrs: { href: "#", "data-toggle": "dropdown" }
-            },
-            [
-              _c("i", { staticClass: "fa fa-flag-o" }),
-              _vm._v(" "),
-              _c("span", { staticClass: "label label-danger" }, [_vm._v("9")])
-            ]
-          ),
-          _vm._v(" "),
-          _c("ul", { staticClass: "dropdown-menu" }, [
-            _c("li", { staticClass: "header" }, [_vm._v("You have 9 tasks")]),
-            _vm._v(" "),
-            _c("li", [
-              _c("ul", { staticClass: "menu" }, [
-                _c("li", [
-                  _c("a", { attrs: { href: "#" } }, [
-                    _c("h3", [
-                      _vm._v(
-                        "\n                                                Design some buttons\n                                                "
-                      ),
-                      _c("small", { staticClass: "pull-right" }, [
-                        _vm._v("20%")
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "progress xs" }, [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "progress-bar progress-bar-aqua",
-                          staticStyle: { width: "20%" },
-                          attrs: {
-                            role: "progressbar",
-                            "aria-valuenow": "20",
-                            "aria-valuemin": "0",
-                            "aria-valuemax": "100"
-                          }
-                        },
-                        [
-                          _c("span", { staticClass: "sr-only" }, [
-                            _vm._v("20% Complete")
-                          ])
-                        ]
-                      )
-                    ])
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("li", { staticClass: "footer" }, [
-              _c("a", { attrs: { href: "#" } }, [_vm._v("View all tasks")])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "dropdown user user-menu" }, [
-          _c(
-            "a",
-            {
-              staticClass: "dropdown-toggle",
-              attrs: { href: "#", "data-toggle": "dropdown" }
-            },
-            [
-              _c("img", {
-                staticClass: "user-image",
-                attrs: {
-                  src: "https://via.placeholder.com/160",
-                  alt: "User Image"
-                }
-              }),
-              _vm._v(" "),
-              _c("span", { staticClass: "hidden-xs" }, [
-                _vm._v("Alexander Pierce")
-              ])
-            ]
-          ),
-          _vm._v(" "),
-          _c("ul", { staticClass: "dropdown-menu" }, [
-            _c("li", { staticClass: "user-header" }, [
-              _c("img", {
-                staticClass: "img-circle",
-                attrs: {
-                  src: "https://via.placeholder.com/160",
-                  alt: "User Image"
-                }
-              }),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v("Alexander Pierce - Web Developer "),
-                _c("small", [_vm._v("Member since Nov. 2012")])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("li", { staticClass: "user-body" }, [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-xs-4 text-center" }, [
-                  _c("a", { attrs: { href: "#" } }, [_vm._v("Followers")])
+              _c("a", { attrs: { href: "#" } }, [
+                _c("div", { staticClass: "pull-left" }, [
+                  _c("img", {
+                    staticClass: "img-circle",
+                    attrs: {
+                      src: "https://via.placeholder.com/160",
+                      alt: "User Image"
+                    }
+                  })
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-xs-4 text-center" }, [
-                  _c("a", { attrs: { href: "#" } }, [_vm._v("Sales")])
+                _c("h4", [
+                  _vm._v(
+                    "\n                                                Support Team\n                                                "
+                  ),
+                  _c("small", [
+                    _c("i", { staticClass: "fa fa-clock-o" }),
+                    _vm._v(" 5 mins")
+                  ])
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-xs-4 text-center" }, [
-                  _c("a", { attrs: { href: "#" } }, [_vm._v("Friends")])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("li", { staticClass: "user-footer" }, [
-              _c("div", { staticClass: "pull-left" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "btn btn-default btn-flat",
-                    attrs: { href: "#" }
-                  },
-                  [_vm._v("Profile")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "pull-right" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "btn btn-default btn-flat",
-                    attrs: { href: "#" }
-                  },
-                  [_vm._v("Sign out")]
-                )
+                _c("p", [_vm._v("Why not buy a new awesome theme?")])
               ])
             ])
           ])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "footer" }, [
+          _c("a", { attrs: { href: "#" } }, [_vm._v("See All Messages")])
         ])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", { staticClass: "dropdown notifications-menu" }, [
+      _c(
+        "a",
+        {
+          staticClass: "dropdown-toggle",
+          attrs: { href: "#", "data-toggle": "dropdown" }
+        },
+        [
+          _c("i", { staticClass: "fa fa-bell-o" }),
+          _vm._v(" "),
+          _c("span", { staticClass: "label label-warning" }, [_vm._v("10")])
+        ]
+      ),
+      _vm._v(" "),
+      _c("ul", { staticClass: "dropdown-menu" }, [
+        _c("li", { staticClass: "header" }, [
+          _vm._v("You have 10 notifications")
+        ]),
+        _vm._v(" "),
+        _c("li", [
+          _c("ul", { staticClass: "menu" }, [
+            _c("li", [
+              _c("a", { attrs: { href: "#" } }, [
+                _c("i", { staticClass: "fa fa-users text-aqua" }),
+                _vm._v(
+                  " 5 new members joined today\n                                        "
+                )
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "footer" }, [
+          _c("a", { attrs: { href: "#" } }, [_vm._v("View all")])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", { staticClass: "dropdown tasks-menu" }, [
+      _c(
+        "a",
+        {
+          staticClass: "dropdown-toggle",
+          attrs: { href: "#", "data-toggle": "dropdown" }
+        },
+        [
+          _c("i", { staticClass: "fa fa-flag-o" }),
+          _vm._v(" "),
+          _c("span", { staticClass: "label label-danger" }, [_vm._v("9")])
+        ]
+      ),
+      _vm._v(" "),
+      _c("ul", { staticClass: "dropdown-menu" }, [
+        _c("li", { staticClass: "header" }, [_vm._v("You have 9 tasks")]),
+        _vm._v(" "),
+        _c("li", [
+          _c("ul", { staticClass: "menu" }, [
+            _c("li", [
+              _c("a", { attrs: { href: "#" } }, [
+                _c("h3", [
+                  _vm._v(
+                    "\n                                                Design some buttons\n                                                "
+                  ),
+                  _c("small", { staticClass: "pull-right" }, [_vm._v("20%")])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "progress xs" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "progress-bar progress-bar-aqua",
+                      staticStyle: { width: "20%" },
+                      attrs: {
+                        role: "progressbar",
+                        "aria-valuenow": "20",
+                        "aria-valuemin": "0",
+                        "aria-valuemax": "100"
+                      }
+                    },
+                    [
+                      _c("span", { staticClass: "sr-only" }, [
+                        _vm._v("20% Complete")
+                      ])
+                    ]
+                  )
+                ])
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "footer" }, [
+          _c("a", { attrs: { href: "#" } }, [_vm._v("View all tasks")])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", { staticClass: "user-body" }, [
+      _c("div", { staticClass: "row" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "pull-left" }, [
+      _c(
+        "a",
+        { staticClass: "btn btn-default btn-flat", attrs: { href: "#" } },
+        [_vm._v("Profile")]
+      )
     ])
   }
 ]
@@ -40021,7 +40054,7 @@ var render = function() {
             }),
             _vm._v(" "),
             _c("span", {
-              staticClass: "glyphicon glyphicon-envelope form-control-feedback"
+              staticClass: "glyphicon glyphicon-lock form-control-feedback"
             }),
             _vm._v(" "),
             _vm.errors.password
@@ -42022,7 +42055,7 @@ var render = function() {
               _vm._v(" "),
               _vm.errors.role_id
                 ? _c("p", { staticClass: "text-danger" }, [
-                    _vm._v(_vm._s(_vm.errors.role_id))
+                    _vm._v(_vm._s(_vm.errors.role_id[0]))
                   ])
                 : _vm._e()
             ]),
@@ -42157,6 +42190,17 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "form-group" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary btn-sm",
+                  on: { click: _vm.checkPermission }
+                },
+                [_vm._v(_vm._s(_vm.loading ? "Loading.." : "Check"))]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
               _vm.alert_permission
                 ? _c("div", { staticClass: "alert alert-success" }, [
                     _vm._v("Permission has been assigned")
@@ -42171,7 +42215,7 @@ var render = function() {
                     "div",
                     { staticClass: "tab-pane active", attrs: { id: "tab_1" } },
                     [
-                      _vm._l(_vm.permission, function(row, index) {
+                      _vm._l(_vm.permissions, function(row, index) {
                         return [
                           _c("input", {
                             key: index,
@@ -58426,13 +58470,22 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _store_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./store.js */ "./resources/js/store.js");
+
 
 var $axios = axios__WEBPACK_IMPORTED_MODULE_0___default.a.create({
   baseURL: '/api',
   headers: {
-    Authorization: localStorage.getItem('token') != 'null' ? 'Bearer ' + localStorage.getItem('token') : '',
+    // Authorization: localStorage.getItem('token') != 'null' ? 'Bearer ' + localStorage.getItem('token'):'',
     'Content-Type': 'application/json'
   }
+});
+$axios.interceptors.request.use(function (config) {
+  var token = _store_js__WEBPACK_IMPORTED_MODULE_1__["default"].state.token;
+  if (token) config.headers.Authorization = "Bearer ".concat(token);
+  return config;
+}, function (error) {
+  return Promise.reject(error);
 });
 /* harmony default export */ __webpack_exports__["default"] = ($axios);
 
@@ -58452,18 +58505,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _router_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./router.js */ "./resources/js/router.js");
 /* harmony import */ var _store_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./store.js */ "./resources/js/store.js");
 /* harmony import */ var _App_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./App.vue */ "./resources/js/App.vue");
-/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/index.js");
-/* harmony import */ var vue_sweetalert2__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-sweetalert2 */ "./node_modules/vue-sweetalert2/dist/index.js");
-/* harmony import */ var bootstrap_vue_dist_bootstrap_vue_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! bootstrap-vue/dist/bootstrap-vue.css */ "./node_modules/bootstrap-vue/dist/bootstrap-vue.css");
-/* harmony import */ var bootstrap_vue_dist_bootstrap_vue_css__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(bootstrap_vue_dist_bootstrap_vue_css__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _mixins_Permission_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./mixins/Permission.js */ "./resources/js/mixins/Permission.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/index.js");
+/* harmony import */ var vue_sweetalert2__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-sweetalert2 */ "./node_modules/vue-sweetalert2/dist/index.js");
+/* harmony import */ var bootstrap_vue_dist_bootstrap_vue_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! bootstrap-vue/dist/bootstrap-vue.css */ "./node_modules/bootstrap-vue/dist/bootstrap-vue.css");
+/* harmony import */ var bootstrap_vue_dist_bootstrap_vue_css__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(bootstrap_vue_dist_bootstrap_vue_css__WEBPACK_IMPORTED_MODULE_8__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_sweetalert2__WEBPACK_IMPORTED_MODULE_5__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__["default"]);
+
+
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_sweetalert2__WEBPACK_IMPORTED_MODULE_7__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_6__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.mixin(_mixins_Permission_js__WEBPACK_IMPORTED_MODULE_4__["default"]);
 
 new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#ar',
@@ -58471,6 +58535,13 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   store: _store_js__WEBPACK_IMPORTED_MODULE_2__["default"],
   components: {
     App: _App_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_5__["mapGetters"])(['isAuth'])),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_5__["mapActions"])('user', ['getUserLogin'])),
+  created: function created() {
+    if (this.isAuth) {
+      this.getUserLogin(); //request data yg sedang login
+    }
   }
 });
 
@@ -58680,6 +58751,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Header_vue_vue_type_template_id_1f42fb90___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/mixins/Permission.js":
+/*!*******************************************!*\
+  !*** ./resources/js/mixins/Permission.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  methods: {
+    $can: function $can(permissionName) {
+      var Permission = this.$store.state.user.authenticated.permission;
+
+      if (typeof Permission != 'undefined') {
+        return Permission.indexOf(permissionName) !== -1;
+      }
+    }
+  }
+});
 
 /***/ }),
 
@@ -60039,8 +60133,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_products_Product_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./pages/products/Product.vue */ "./resources/js/pages/products/Product.vue");
 /* harmony import */ var _pages_products_Add_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./pages/products/Add.vue */ "./resources/js/pages/products/Add.vue");
 /* harmony import */ var _pages_products_Edit_vue__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./pages/products/Edit.vue */ "./resources/js/pages/products/Edit.vue");
-/* harmony import */ var _pages_setting_Index_vue__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./pages/setting/Index.vue */ "./resources/js/pages/setting/Index.vue");
-/* harmony import */ var _pages_setting_roles_SetPermission_vue__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./pages/setting/roles/SetPermission.vue */ "./resources/js/pages/setting/roles/SetPermission.vue");
+/* harmony import */ var _pages_setting_Index_vue__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./pages/setting/Index.vue */ "./resources/js/pages/setting/Index.vue");
+/* harmony import */ var _pages_setting_roles_SetPermission_vue__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./pages/setting/roles/SetPermission.vue */ "./resources/js/pages/setting/roles/SetPermission.vue");
 
 
 
@@ -60068,7 +60162,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     name: 'home',
     component: _pages_Home_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
     meta: {
-      requireAuth: true
+      requiresAuth: true
     } //menandakan proses membutuhkan otentikasi
 
   }, {
@@ -60079,7 +60173,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     path: '/outlets',
     component: _pages_outlets_Index_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
     meta: {
-      requireAuth: true
+      requiresAuth: true
     },
     //menandakan proses membutuhkan otentikasi
     children: [{
@@ -60108,7 +60202,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     path: '/couriers',
     component: _pages_couriers_Index_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
     meta: {
-      requireAuth: true
+      requiresAuth: true
     },
     children: [{
       path: '',
@@ -60136,7 +60230,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     path: '/product',
     component: _pages_products_Index_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
     meta: {
-      requireAuth: true
+      requiresAuth: true
     },
     children: [{
       path: '',
@@ -60162,14 +60256,14 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     }]
   }, {
     path: '/setting',
-    component: _pages_setting_Index_vue__WEBPACK_IMPORTED_MODULE_18__["default"],
+    component: _pages_setting_Index_vue__WEBPACK_IMPORTED_MODULE_17__["default"],
     meta: {
-      requireAuth: true
+      requiresAuth: true
     },
     children: [{
       path: 'role-permission',
       name: 'role.permissions',
-      component: _pages_setting_roles_SetPermission_vue__WEBPACK_IMPORTED_MODULE_19__["default"],
+      component: _pages_setting_roles_SetPermission_vue__WEBPACK_IMPORTED_MODULE_18__["default"],
       meta: {
         title: 'Set Permissions'
       }
@@ -60182,7 +60276,7 @@ router.beforeEach(function (to, from, next) {
   _store_js__WEBPACK_IMPORTED_MODULE_4__["default"].commit('CLEAR_ERRORS'); //berfungsi untuk membersihkan state error setiap halaman di load
 
   if (to.matched.some(function (record) {
-    return record.meta.requireAuth;
+    return record.meta.requiresAuth;
   })) {
     var auth = _store_js__WEBPACK_IMPORTED_MODULE_4__["default"].getters.isAuth;
 
@@ -60252,7 +60346,7 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
       state.token = payload;
     },
     SET_ERRORS: function SET_ERRORS(state, payload) {
-      state.erros = payload;
+      state.errors = payload;
     },
     CLEAR_ERRORS: function CLEAR_ERRORS(state) {
       state.errors = [];
@@ -60306,7 +60400,7 @@ var actions = {
             invalid: 'Email/Password Salah'
           }, {
             root: true
-          });
+          }); // alert('error');
         }
 
         resolve(response.data); //kegunaan resolve diakhir agar dianggap proses selesai
@@ -60765,7 +60859,7 @@ var mutations = {
     state.permissions = payload;
   },
   ASSIGN_ROLE_PERMISSION: function ASSIGN_ROLE_PERMISSION(state, payload) {
-    state.permissions = payload;
+    state.role_permission = payload;
   },
   CLEAR_ROLE_PERMISSION: function CLEAR_ROLE_PERMISSION(state, payload) {
     state.role_permission = [];
@@ -60862,7 +60956,7 @@ var actions = {
         //apabila terjadi error validasi
         if (error.response.status == 422) {
           //set errornya agar dapat ditampilkan
-          commit('SET_ERROS', error.response.data.errors, {
+          commit('SET_ERRORS', error.response.data.errors, {
             root: true
           });
         }
