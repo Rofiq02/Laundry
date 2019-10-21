@@ -14,7 +14,7 @@ class BroadcastServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Broadcast::routes();
+        Broadcast::routes(['middleware' => 'auth:api']); //agar data broadcast hanya dapat diaksek oleh user yg telah login
 
         require base_path('routes/channels.php');
     }

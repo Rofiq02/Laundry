@@ -15,6 +15,7 @@
                         <li v-if="$can('read outlets')"><router-link :to="{ name: 'outlets.data' }">Outlets</router-link></li>
                         <li v-if="$can('read couriers')"><router-link :to="{ name: 'couriers.data' }">Courier</router-link></li>
                         <li v-if="$can('read products')"><router-link :to="{ name: 'products.data' }">Products</router-link></li>
+                         <li><router-link :to="{ name: 'expenses.data' }">Expenses</router-link></li>
                         <li class="dropdown" v-if="authenticated.role == 0">
                             <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Settings <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
@@ -32,31 +33,33 @@
                     <ul class="nav navbar-nav">
                         <li class="dropdown messages-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-envelope-o"></i>
-                                <span class="label label-success">4</span>
+                                <i class="fa fa-bell-o"></i>
+                                <span class="label label-success">{{ notifications.length }}</span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li class="header">You have 4 messages</li>
+                                <li class="header">You have {{ notifications.length }} messages</li>
                                 <li>
-                                    <ul class="menu">
-                                        <li>
-                                            <a href="#">
+                                    <ul class="menu" v-if="notifications.length > 0">
+                                        <li v-for="(row, index) in notifications" :key="index">
+                                            <a href="javascript:void(0)" @click="readNotif(row)">
                                                 <div class="pull-left">
                                                     <img src="https://via.placeholder.com/160" class="img-circle" alt="User Image">
                                                 </div>
                                                 <h4>
-                                                    Support Team
-                                                    <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                                                    <!-- Nama Pengirim -->
+                                                    {{ row.data.sender_name }}
+                                                    <small><i class="fa fa-clock-o"></i> {{ row.created_at | formatDate }}</small>
                                                 </h4>
-                                                <p>Why not buy a new awesome theme?</p>
+                                                <!-- Jenis permintaan notifikasi -->
+                                                <p>{{ row.data.expenses.description.substr(0, 30) }}</p>
                                             </a>
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="footer"><a href="#">See All Messages</a></li>
+                                <!-- <li class="footer"><a href="#">See All Messages</a></li> -->
                             </ul>
                         </li>
-                        <li class="dropdown notifications-menu">
+                        <!-- <li class="dropdown notifications-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-bell-o"></i>
                                 <span class="label label-warning">10</span>
@@ -103,7 +106,7 @@
                                     <a href="#">View all tasks</a>
                                 </li>
                             </ul>
-                        </li>
+                        </li> -->
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="https://via.placeholder.com/160" class="user-image" alt="User Image">
@@ -145,14 +148,33 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+import moment from 'moment'
 export default {
     computed: {
         ...mapState('user', {
             authenticated: state => state.authenticated //Me load state authenticated
+        }),
+
+        ...mapState('notification', {
+            notifications: state => state.notifications //mengambil state notifacation
         })
     },
+    filters: {
+        //untuk mengubah format yanggal menjadi time ago
+        formatDate(val){
+            return moment(new Date(val)).fromNow()
+        }
+    },
     methods: {
+        ...mapActions('notification', ['readNotification']), //mendefinisi fungsi read notif
+
+        //ketika notifikasi di klik maka akan menjalankan fungsi ini
+        readNotif(row){
+            //mengirimkan request ke server bahwa notifikasi telah dibaca
+            this.readNotification({ id: row.id }).then(() => this.$router.push({ name: 'expenses.view', params: { id: row.data.expenses.id } }))
+        },
+
         //ketika tombol logout ditekan, fungsi ini dijalankan
         logout(){
             return new Promise((resolve, reject) => {

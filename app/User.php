@@ -53,4 +53,10 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($value);
     }
+
+    //agar nama user dimulai dengan huruf kapital
+    public function getNamaAttribute($value)
+    {
+        return ucfirst($value);
+    }
 }
