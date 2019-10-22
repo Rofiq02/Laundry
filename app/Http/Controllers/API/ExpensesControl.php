@@ -48,7 +48,7 @@ class ExpensesControl extends Controller
 
         //yg akan mendapatkan notifikasi superadmin dan finance
         $users = User::whereIn('role', [0,2])->get();
-        Notification::send($users, new ExpensesNotification($expenses, $user));
+        // Notification::send($users, new ExpensesNotification($expenses, $user));
 
         return response()->json(['status' => 'success']);
     }
@@ -84,7 +84,7 @@ class ExpensesControl extends Controller
         $this->validate($request, ['id' => 'required|exists:expenses,id']);
         $expenses = Expense::with(['user'])->find($request->id);
         $expenses->update(['status' => 1]); //ubah statusnya jadi approve
-        Notification::send($expenses->user, new ExpensesNotification($expenses, $expenses->user));
+        // Notification::send($expenses->user, new ExpensesNotification($expenses, $expenses->user));
 
         return response()->json(['status' => 'success']);
     }
@@ -94,7 +94,7 @@ class ExpensesControl extends Controller
         $this->validate($request, ['id' => 'required|exists:expenses,id', 'reason' => 'required|string']);
         $expenses = Expense::with(['user'])->find($request->id);
         $expenses->update(['status' => 2, 'reason' => $request->reason]);
-        Notification::send($expenses->user, new ExpensesNotification($expenses, $expenses->user));
+        // Notification::send($expenses->user, new ExpensesNotification($expenses, $expenses->user));
 
         return response()->json(['status' => 'success']);
     }

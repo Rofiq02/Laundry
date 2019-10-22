@@ -58,7 +58,7 @@
 import { mapActions } from 'vuex'
 export default {
     name: 'ViewExpenses',
-    create(){
+    created(){
         this.editExpenses(this.$route.params.id).then((res) => {
             let row = res.data
             this.description = row.description
