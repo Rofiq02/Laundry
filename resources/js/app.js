@@ -13,9 +13,12 @@ import Pusher from "pusher-js"
 import BootstrapVue from 'bootstrap-vue'
 import VueSweetalert2 from 'vue-sweetalert2'
 
+import vSelect from 'vue-select'
+
 Vue.use(VueSweetalert2)
 Vue.use(BootstrapVue)
 Vue.mixin(Permissions)
+Vue.component('v-select', vSelect)
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import { type } from 'os'

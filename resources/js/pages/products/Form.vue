@@ -45,6 +45,27 @@
             <input type="number" v-model="product.price" class="form-control">
             <p class="text-danger" v-if="errors.price">{{ errors.price[0] }}</p>
         </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group" :class="{ 'has-error':errors.service }">
+                    <label for="">Lama Pengerjaan</label>
+                    <input type="number" class="form-control" v-model="product.service">
+                    <p class="text-danger" v-if="errors.service">{{ errors.service[0] }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group" :class="{ 'has-error': errors.service_type }">
+                    <label for="">Satuan</label>
+                    <select class="form-control" v-model="product.service_type">
+                        <option value="">Pilih</option>
+                        <option value="hari">Hari</option>
+                        <option value="jam">Jam</option>
+                    </select>
+                    <p class="text-danger" v-if="errors.service_type">{{ errors.service_type[0] }}</p>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -63,7 +84,9 @@ export default {
                     name: res.data.name,
                     unit_type: res.data.unit_type,
                     price: res.data.price,
-                    laundry_type: res.data.laundry_type_id
+                    laundry_type: res.data.laundry_type_id,
+                    service: res.data.service,
+                    service_type: res.data.service_type
                 }
             })
         }
@@ -75,7 +98,9 @@ export default {
                 name: '',
                 unit_type: '',
                 price: '',
-                laundry_type: ''
+                laundry_type: '',
+                service: '',
+                service_type: ''
             },
             laundry_type: '',
             showForm: false //default form untuk menambahkan jenis laundry
@@ -102,6 +127,16 @@ export default {
                 })
             })
         },
+        clearForm(){
+            this.product = {
+                name: '',
+                unit_type: '',
+                price: '',
+                laundry_type: '',
+                service: '',
+                service_type: ''
+            }
+        },
 
         submit(){
             //apabila diaksesnya dengan route namne product add
@@ -109,12 +144,7 @@ export default {
                 //maka fungsi ini dijalankan untuk menambah product baru
                 this.addProductLaundry(this.product).then(() => {
                     //kosongkan variable ketika berhasi menyimpan
-                    this.product = {
-                        name: '',
-                        unit_type: '',
-                        price: '',
-                        laundry_type: ''
-                    }
+                   this.clearForm()
                     //redirect kembali ke halaman list product
                     this.$router.push({ name: 'products.data' })
                 })
@@ -125,13 +155,7 @@ export default {
                 //kirim permintaan ke server untutk mengubah data
                 this.updateProduct(this.product).then(() => {
                     //kosongkan variable
-                    this.product = {
-                        name: '',
-                        unit_type: '',
-                        price: '',
-                        laundry_type: ''
-                    }
-
+                    this.clearForm()
                     //redirect kembali
                     this.$router.push({ name: 'products.data' })
                 })
