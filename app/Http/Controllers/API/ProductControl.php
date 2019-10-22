@@ -43,7 +43,7 @@ class ProductControl extends Controller
             'unit_type' => 'required',
             'price' => 'required|integer',
             'laundry_type' => 'required',
-            'servive' => 'required|integer',
+            'service' => 'required|integer',
             'service_type' => 'required'
        ]);
 

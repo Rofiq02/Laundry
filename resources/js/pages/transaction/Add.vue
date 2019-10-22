@@ -10,6 +10,10 @@
                     <button class="btn btn-primary btn-sm btn-flat" @click.prevent="submit">
                         <i class="fa fa-save"></i> Create Transaction
                     </button>
+
+                    <button class="btn btn-danger btn-sm btn-flat" @click.prevent="clearForm">
+                        Clear Form
+                    </button>
                 </div>
             </div>
         </div>
@@ -24,6 +28,9 @@ export default {
         //ketika tombol create transaction ditekan maka akan menjalankan method ini
         submit(){
             this.$refs.form.submit()
+        },
+        clearForm(){
+            this.$refs.form.resetForm() // akan menjalankan reset form pada form vue
         }
     },
     components: {

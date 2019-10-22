@@ -42,7 +42,7 @@ Route::group(['middleware' => 'auth:api'], function(){
 
     Route::resource('customer','API\CustomerControl')->except(['create','show']);
 
-    Route::resource('transaction', 'API\TransactionContro')->except(['create', 'show']);
+    Route::resource('transaction', 'API\TransactionControl')->except(['create', 'show']);
 });
 
 Route::post('/login', 'Auth\LoginController@login');

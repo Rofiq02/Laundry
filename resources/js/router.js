@@ -204,7 +204,7 @@ const router = new Router({
             children: [
                 {
                     path: 'create',
-                    name: 'transaction.add',
+                    name: 'transactions.add',
                     component: AddTransaction,
                     meta: { title: 'Create New Transaction' }
                 },

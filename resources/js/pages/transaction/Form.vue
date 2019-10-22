@@ -8,13 +8,14 @@
                         v-model="transactions.customer_id"
                         @search="onSearch"
                         label="name"
-                        placeholde="Masukkan Kata Kunci"
+                        placeholder="Masukkan Kata Kunci"
                         :filterable="false">
-                        <template slot="no-options">
-                        </template>
-                        <template v-slot:cell(option)="option">
-                            {{ option.name }}
-                        </template>
+                    <template slot="no-options">
+                        Masukkan Kata Kunci
+                    </template>
+                    <template v-slot:cell(option)="option">
+                        {{ option.name }}
+                    </template>
                 </v-select>
                 <p class="text-danger" v-if="errors.customer_id">{{ errors.customer_id[0] }}</p>
             </div>
@@ -57,7 +58,7 @@
         </div>
         <div class="col-md-12">
             <hr>
-            <button class="btn btn-warning btn-sm" style="margin-bottom: 10px" @click="addProduct">Tambah</button>
+            <button class="btn btn-warning btn-sm" style="margin-bottom: 10px" v-if="filterProduct.length == 0" @click="addProduct">Tambah</button>
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead>
@@ -77,10 +78,10 @@
                                     label="name"
                                     placeholder="Masukkan Kata Kunci"
                                     :filterable="false">
-                                    <template v-slot:cell(no-option)>
+                                    <template slot="no-options">
                                         Masukkan Kata Kunci
                                     </template>
-                                    <template v-slot(option)="option">
+                                    <template v-slot:cell(option)="option">
                                         {{ option.name }}
                                     </template>
                                 </v-select>
@@ -88,7 +89,7 @@
                             <td>
                                 <div class="input-group">
                                     <input type="number" v-model="row.qty" class="form-control" @blur="calculate(index)">
-                                    <span class="input-group-addon">{{ row.laundry_price != null && row.laundry_price.unit_type == 'Kilogram' ? 'gram':'pcs' }}</span>
+                                    <span class="input-group-addon">{{ row.laundry_price != null && row.laundry_price.unit_type == 'Kilogram' ? 'gram' : 'pcs' }}</span>
                                 </div>
                             </td>
                             <td>Rp {{ row.price }} </td>
@@ -140,7 +141,12 @@ export default {
         total(){
             //menjumlahkan subtotal
             return _.sumBy(this.transactions.detail, function(o) {
-                return o.subtotal
+                return parseFloat(o.subtotal)
+            })
+        },
+        filterProduct(){
+            return _.filter(this.transactions.detail, function(item){
+                return item.laundry_price == null
             })
         }
     },
@@ -165,7 +171,9 @@ export default {
         },
         //ketika tombol tambahkan ditekan, maka akan menambahkan item baru
         addProduct(){
-            this.transactions.detail.push({ laundry_price: null, qty: null, price: 0, subtotal:0 })
+            if(this.filterProduct.length == 0){
+                this.transactions.detail.push({ laundry_price: null, qty: null, price: 0, subtotal:0 })
+            }
         },
         //ketikan tombol hapus padaa masing - masing item ditekan maka akan menghapus berdasarkan index datanya
         removeProduct(index){
@@ -193,8 +201,14 @@ export default {
         //fungsi dijalankan saat tombol create di tekan
         submit(){
             this.isSuccess = false
-            //mengirim permintaan ke server untuk menyimpan data transaksi
-            this.createTransaction(this.transactions).then(() => this.isSuccess = true)
+            //mengirim permintaan ke server untuk menyimpan data transaksi serta mefilter datanya dengan kondisi laundry price != null
+            let filter = _.filter(this.transactions.detail, function(item){
+                return item.laundry_price != null
+            })
+
+            if(filter.length > 0){
+                this.createTransaction(this.transactions).then(() => this.isSuccess = true)
+            }
         },
         newCustomer(){
             this.isForm = true //mengubah value is form menjadi true
@@ -205,6 +219,14 @@ export default {
                 this.transactions.customer_id = res.data
                 this.isForm = false //agar form tertutup
             })
+        },
+        resetForm(){
+            this.transactions = {
+                customer_id : null,
+                detail : [
+                    { laundry_price: null, qty: 1, price: 0, subtotal: 0 }
+                ]
+            }
         }
     },
     components: {
