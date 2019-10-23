@@ -11,7 +11,7 @@ export default {
         //ketika terjadi perubahan value dari props data
         data: {
             handler(){
-                this._data._chart.destry() //maka hapus chart
+                this._data._chart.destroy() //maka hapus chart
                 this.lineRenderChart() // dan render kembali dengan data yg baru
             },
             deep: true
@@ -22,7 +22,7 @@ export default {
             //fungsi untuk merender chart
             this.renderChart({
                 labels: this.labels, //label berdasarkan prop label
-                dataset: [{
+                datasets: [{
                     label: 'Data Transaksi',
                     data: this.data, //data yg akan menjadi chart
                     backgroundColor: [

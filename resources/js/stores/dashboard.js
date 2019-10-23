@@ -19,7 +19,7 @@ const actions = {
             $axios.get(`/chart?month=${payload.month}&year=${payload.year}`)
             .then((response) => {
                 //kemudian kirim data ke mutation untuk kemudian disimpan di state
-                commit('ASSIGN_DATA_TRANSACTION', 'response.data')
+                commit('ASSIGN_DATA_TRANSACTION', response.data)
                 resolve(response.data)
             })
         })

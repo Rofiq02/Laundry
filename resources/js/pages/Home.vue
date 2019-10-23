@@ -51,7 +51,7 @@
                        </div>
                        <div class="panel-body">
                            <!-- menampilkan chart -->
-                           <line-chart v-if="transaction.length > 0" :data="transaction_data" :options="chartOptions" :labels="labels" />
+                           <line-chart v-if="transactions.length > 0" :data="transaction_data" :options="chartOptions" :labels="labels" />
                        </div>
                    </div>
                </div>
@@ -101,7 +101,7 @@ export default {
     },
     computed: {
         ...mapState('dashboard', {
-            transaction:state => state.transactions // ambil data dari state
+            transactions:state => state.transactions // ambil data dari state
         }),
         //list tahun
         years(){
@@ -110,7 +110,7 @@ export default {
         //data labels yg diterima dari server
         labels(){
             //filter hanya mengambil datenya saja
-            return _.map(this.transactions, function(0){
+            return _.map(this.transactions, function(o){
                 return moment(o.date).format('DD')
             });
         },

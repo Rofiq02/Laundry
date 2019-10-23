@@ -5,6 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Exports\TransactionExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Transaction;
+use DB;
 
 class DashboardControl extends Controller
 {
@@ -49,6 +52,6 @@ class DashboardControl extends Controller
         //meminta data dari method chart diatas karena datanya sama
         $transaction = $this->chart();
 
-        return Eexcel::download(new TransactionExport($transaction, request()->month, request()->year), 'transaction.xlsx');
+        return Excel::download(new TransactionExport($transaction, request()->month, request()->year), 'transaction.xlsx');
     }
 }
