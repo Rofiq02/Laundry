@@ -45,6 +45,9 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::resource('transaction', 'API\TransactionControl')->except(['create', 'show']);
     Route::post('transaction/complete-item', 'API\TransactionControl@completeItem');
     Route::post('transaction/payment','API\TransactionControl@makePayment');
+
+    Route::get('chart', 'API\DashboardControl@chart');
+    Route::get('export', 'API\DashboardControl@exportData');
 });
 
 Route::post('/login', 'Auth\LoginController@login');
