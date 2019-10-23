@@ -45,7 +45,7 @@
                                    </div>
                                </div>
                                <div class="col-md-2">
-                                   <button class="btn btn-primary btn-sm pull-right">Export</button>
+                                   <button class="btn btn-primary btn-sm pull-right" @click="exportData">Export</button>
                                </div>
                            </div>
                        </div>
@@ -101,8 +101,9 @@ export default {
     },
     computed: {
         ...mapState('dashboard', {
-            transactions:state => state.transactions // ambil data dari state
+            transactions: state => state.transactions // ambil data dari state
         }),
+        ...mapState(['token']),
         //list tahun
         years(){
             return _.range(2010, moment().add(1, 'years').format('Y'))
@@ -125,7 +126,7 @@ export default {
     methods: {
         ...mapActions('dashboard', ['getChartData']),
         exportData(){
-            window.open(`/api/export?api_token=${this.token}&month=${this.month}&year=${this.year}`)
+            window.open(`api/export?api_token=${this.token}&month=${this.month}&year=${this.year}`)
         }
     },
     components: {

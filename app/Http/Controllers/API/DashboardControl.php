@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Transaction;
 use DB;
+use Excel;
 
 class DashboardControl extends Controller
 {

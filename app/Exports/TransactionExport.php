@@ -8,7 +8,7 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class TransactionExport implements FromCollection
+class TransactionExport implements FromView, ShouldAutoSize
 {
     protected $transaction;
     protected $month;
